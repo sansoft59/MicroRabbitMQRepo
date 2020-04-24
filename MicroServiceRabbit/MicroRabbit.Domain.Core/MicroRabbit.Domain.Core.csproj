@@ -1,13 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Bus\" />
-    <Folder Include="Commands\" />
-    <Folder Include="Events\" />
-  </ItemGroup>
+<PropertyGroup>
+    <PackageTargetFallback>net451;dotnet5.6;portable-net45+win8</PackageTargetFallback>
+</PropertyGroup>
+<ItemGroup>
+  <PackageReference Include="MediatR" Version="7.0.0" />
+</ItemGroup>
+<ItemGroup>
+  <Compile Update="Bus\IEventBus.cs">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </Compile>
+</ItemGroup>
 
 </Project>
