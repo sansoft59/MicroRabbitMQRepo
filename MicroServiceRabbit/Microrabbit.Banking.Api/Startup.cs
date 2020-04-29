@@ -2,14 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microrabbit.Banking.Data.Context;
+using MicroRabbit.Infra.IOC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MediatR;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Microrabbit.Banking.Api
 {
@@ -25,7 +30,33 @@ namespace Microrabbit.Banking.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<BankingDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("BankingDbConnection"));
+
+            }
+            );
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Banking Microservice", Version = "v1" });
+            });
+
+
+
+
+            services.AddMediatR(typeof(Startup));
+
+           // services.adds
+
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddControllers();
+            Registerservices(services);
+        }
+
+        private void Registerservices(IServiceCollection services)
+        {
+            DependencyContainer.RegisterServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +76,12 @@ namespace Microrabbit.Banking.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Banking Microservice V1");
             });
         }
     }

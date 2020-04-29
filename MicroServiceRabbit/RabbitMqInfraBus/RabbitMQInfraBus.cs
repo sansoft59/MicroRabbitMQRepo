@@ -15,7 +15,7 @@ namespace RabbitMqInfraBus
     public sealed class RabbitMQInfraBus : IEventBus
     { 
 
-    private readonly IMediator _mediator;
+    public readonly IMediator _mediator;
         private readonly Dictionary<string, List<Type>> _handlers;
         private readonly List<Type> _eventypes;
 
